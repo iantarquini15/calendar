@@ -39,11 +39,21 @@
     padding: 10px;
 }
 .fab{
+   
     border-radius: 100%;
     bottom: 25px;
-    font-size: 30px;
-    padding: 25px;
+    font-size: 20px;
+    padding: 20px;
     position: fixed;
     right: 25px;
+}
+.fab-danger {
+    border-radius: 100%;
+    bottom: 25px;
+    font-size: 20px;
+    height: 70px;
+    left: 25px;
+    position: fixed;
+    width: 70px;
    
 }

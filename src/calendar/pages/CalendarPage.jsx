@@ -1,33 +1,24 @@
-import { useState } from 'react';
-import { Calendar } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { addHours } from 'date-fns';
-import { CalendarEventBox, CalendarModal, FabAddNew, NavBar } from "../";
+import { Calendar } from 'react-big-calendar';
+import { CalendarEventBox, CalendarModal, FabAddNew, FabDelete, NavBar } from "../";
 import { localizer } from '../../helpers';
 import { LOCALSTORAGE } from 'localforage';
-import { useUiStore } from '../../hooks/useUiStore';
-import { useDispatch } from 'react-redux';
 import { useCalendarStore } from '../../hooks';
+import { useDispatch } from 'react-redux';
+import { useEffect, useState } from 'react';
+import { useUiStore } from '../../hooks/useUiStore';
 
 
 
 
-const event = [{
-  title: 'Cumpleaños de Feli',
-  notes: 'Hay que cocinar el asado',
-  start: new Date(),
-  end: addHours(new Date(), 2),
-  user: {
-    id: 12345,
-    name:'Ian',
-  }
-}]
+
 
 export const CalendarPage = () => {
   
 
   const { openDateModal } = useUiStore();
-  const { events,setActiveEvent } = useCalendarStore();
+  const { events,setActiveEvent, startLoadingEvents } = useCalendarStore();
   
   const [lastView, setLastView] = useState(localStorage.getItem('lastView') || 'week' )
 
@@ -57,6 +48,11 @@ export const CalendarPage = () => {
     console.log({ viewChanged: event });
     setLastView(event);
   }
+  
+  useEffect(() => {
+    startLoadingEvents()
+  }, [])
+  
 
   return (
     <div>
@@ -64,7 +60,7 @@ export const CalendarPage = () => {
     
      <Calendar
       localizer={localizer}
-        events={event}
+        events={events}
         defaultView={lastView}
       startAccessor="start"
       endAccessor="end"
@@ -81,6 +77,7 @@ export const CalendarPage = () => {
       
       <CalendarModal />
       <FabAddNew />
+      <FabDelete />
     </div>
   )
 }
