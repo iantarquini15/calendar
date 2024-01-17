@@ -2,11 +2,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { onAddNewEvent, onDeleteEvent, onSetActiveEvent, onUpdateEvent, onloadEvents } from "../store";
 import calendarApi from "../api/calendarApi";
 import { convertEventsToDateEvents } from "../helpers/convertEventsToDateEvents";
+import Swal from "sweetalert2";
 
 export const useCalendarStore = () => {
  
     const dispatch = useDispatch();
-    const { events,activeEvent } = useSelector(state => state.calendar);
+    const { events , activeEvent } = useSelector(state => state.calendar);
     const { user } = useSelector(state => state.auth);
 
     const setActiveEvent = ( calendarEvent ) => {
@@ -14,20 +15,31 @@ export const useCalendarStore = () => {
     }
 
     const startSavingEvent = async( calendarEvent ) => {
-        //TODO:Update event
-       if(calendarEvent._id){
-        //actualizando
-        dispatch(onUpdateEvent({ ...calendarEvent }))
+        
+        try {
 
-       } else {
-        //creando
-        const { data } = await calendarApi.post('/events' , calendarEvent );
-        console.log({data});
+            if(calendarEvent.id){
+                //actualizando
+                 await calendarApi.put(`/events/${ calendarEvent.id } ` , calendarEvent );
+                dispatch(onUpdateEvent({ ...calendarEvent , user }));
+                return;
         
-        dispatch(onAddNewEvent({ ...calendarEvent , id: data.evento.id , user }));
-        
-       }
-    }
+               } 
+                //creando
+                const { data } = await calendarApi.post('/events' , calendarEvent );
+                console.log({data});
+                
+                dispatch(onAddNewEvent({ ...calendarEvent , id: data.evento.id , user }));
+                
+               
+        } catch (error) {
+
+            console.log(error);
+            Swal.fire('There is an Error trying to save ' , error.response.data.msg , 'error');
+        }
+
+      
+    
 
     const startDeleteEvent = () => {
         dispatch( onDeleteEvent() );
@@ -56,5 +68,6 @@ export const useCalendarStore = () => {
         startDeleteEvent,
         startLoadingEvents,
         startSavingEvent,
-    }
+     }
+  }
 }

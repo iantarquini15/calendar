@@ -60,18 +60,18 @@ export const CalendarPage = () => {
     
      <Calendar
       localizer={localizer}
-        events={events}
-        defaultView={lastView}
-      startAccessor="start"
-      endAccessor="end"
-        style={{ height: 'calc(100vh - 80px)' }}
-        eventPropGetter={eventStyleGetter}
-        components={{
-          event:CalendarEventBox
-        }}
-        onDoubleClickEvent={onDoubleClick}
-        onSelectEvent={onSelect}
-        onView={onViewChanged}
+      events={events}
+      defaultView={lastView}
+    startAccessor="start"
+    endAccessor="end"
+      style={{ height: 'calc(100vh - 80px)' }}
+      eventPropGetter={eventStyleGetter}
+      components={{
+        event:CalendarEventBox
+      }}
+      onDoubleClickEvent={onDoubleClick}
+      onSelectEvent={onSelect}
+      onView={onViewChanged}
 
       />
       
