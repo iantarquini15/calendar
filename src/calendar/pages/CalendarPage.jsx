@@ -1,11 +1,8 @@
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import { addHours } from 'date-fns';
 import { Calendar } from 'react-big-calendar';
 import { CalendarEventBox, CalendarModal, FabAddNew, FabDelete, NavBar } from "../";
 import { localizer } from '../../helpers';
-import { LOCALSTORAGE } from 'localforage';
-import { useCalendarStore } from '../../hooks';
-import { useDispatch } from 'react-redux';
+import { useAuthStore, useCalendarStore } from '../../hooks';
 import { useEffect, useState } from 'react';
 import { useUiStore } from '../../hooks/useUiStore';
 
@@ -16,7 +13,7 @@ import { useUiStore } from '../../hooks/useUiStore';
 
 export const CalendarPage = () => {
   
-
+  const { user } = useAuthStore(); 
   const { openDateModal } = useUiStore();
   const { events,setActiveEvent, startLoadingEvents } = useCalendarStore();
   
@@ -24,8 +21,9 @@ export const CalendarPage = () => {
 
   const eventStyleGetter = (event,start,end,isSelected) => {
    
+    const isMyEvent = ( user.uid === event.user._id ) || ( user.uid === event.user.uid );
     const style = {
-      backgroundColor: '#347CF7',
+      backgroundColor: isMyEvent ? '#347CF7' : '#465660',
       borderRadius: '0px',
       opacity: '0.8',
       color:'white'
